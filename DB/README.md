@@ -33,16 +33,20 @@
    * Syntax suger. ``` WHERE c >= a AND c <= b ``` 
  * FROM, WHERE
  * LIKE pattern
-   * Two wildcards symbols: 
-     * '%' match none or any string
-     * '_' match any single character
+    * '%' match none or any string
+    * '_' match any single character
+    * '\' comes to escape the wildcard character
+    * DB has to scan through all entries. Notice the efficiency downgrade
+ * ESCAPE
  * CAST
  * ORDER BY columns [ASC|DESC], ...
  * AS 
    * create an alias
+   * column alias can be used in ORDER BY, GROUP BY, and HAVING
  * FORMAT(arithmetic, precision)
    * turn into string
  * ROUND
+ * CONCAT_WS (delim, str1, str2, ...)
  
 
 3. SELECT 
