@@ -16,15 +16,14 @@
    
    CREATE TABLE t1 (column-list) engine = type
    ```
+   Since MySQL 5.5, the default engine is InnoDB. Before, it is MyISAM.
    ```
    column-list: column
+             | column , column-list
    
-   column-list: column , column-list
-   
-   column: ID TYPE [[NOT] NULL] [DEFAULT val] [COMMENT STRING] [AUTOINCREMENT] |
-   
-            PRIMARY KEY (IDs)
-            KEY ID (IDs)
+   column: ID TYPE [[NOT] NULL] [DEFAULT val] [COMMENT STRING] [AUTOINCREMENT] 
+         | PRIMARY KEY (IDs)
+         | KEY ID (IDs)
    ```
 
 4. SELECT
@@ -82,10 +81,16 @@
  * [LEFT|RIGHT|FULL] OUTER JOIN  
  
 
-4. SELECT 
-```
-SELECT column1, column2, ...
-FROM
-WHERE 
-ORDER BY column1 [ASC|DESC]
-```
+5. INSERT
+ * INSERT INTO t1 VALUES (t1, t2, ...)
+ * INSERT INTO t1 select-clause
+ * The underlying schema must be the same
+
+6. DELETE
+ * DELETE FROM t1 WHERE ...
+
+7. UPDATE
+ * UPDATE TABLE SET (attr = expr)+ WHERE ...
+ 
+
+
