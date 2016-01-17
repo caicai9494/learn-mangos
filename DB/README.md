@@ -5,7 +5,29 @@
   mysql -u root -p < start_up_script.sql
   ```
 
-2. MySQL Keywords
+2. Database Administration
+ * SHOW DATABASES
+ * USE t1
+ * SHOW COLUMNS FROM t1
+ 
+3. CREATE
+   ``` 
+   DROP TABLE IF EXISTS t1
+   
+   CREATE TABLE t1 (column-list) engine = type
+   ```
+   ```
+   column-list: column
+   
+   column-list: column , column-list
+   
+   column: ID TYPE [[NOT] NULL] [DEFAULT val] [COMMENT STRING] [AUTOINCREMENT] |
+   
+            PRIMARY KEY (IDs)
+            KEY ID (IDs)
+   ```
+
+4. SELECT
  * SELECT DISTINCT column1, ...
    * DISTINCT treats two NULL-s as equal, thus duplicate
    * DISTINCT can be followed by multiply columns
@@ -13,6 +35,7 @@
    * Cannot compare using =(equal) sign
    * WHERE nullColumn IS NULL
    * WHERE nullColumn IS NOT NULL
+   * Some subtlity with NULL: 1. All columns can be made NULL. 2. Whenever there's a NULL on an arbitrary column c, WHERE c < v1 or c >= v2 cannot fetch the entry with NULL. 3. NULL is a distinct value. 4. COUNT doesn't include NULL
  * GROUP BY column1
    * This is very similar to DISTINCT column. The major difference is that GROUP BY will sort the entries
  * HAVING
@@ -27,6 +50,8 @@
  * IN
    * (expr|column) in (value1, value2, ...)
    * This is a syntax suger. You can write ``` WHERE c = v1 or c = v2 or ... ```
+   * ... WHERE c1 IN (SUBQUERY) 
+   * Whenever one does a SUBQUERY, the query can usually be written by JOIN. Typically JOIN is more efficient, but it is not as readable as using a SUBQUERY.
  * NOT
    * Used to negate a predicate 
  * BETWEEN a AND b
@@ -47,9 +72,17 @@
    * turn into string
  * ROUND
  * CONCAT_WS (delim, str1, str2, ...)
+ * INNER JOIN 
+   * The same as JOIN
+   * JOIN T1, T2 ON ...
+   * JOIN two tables where c1 and c2 are equal 
+ * NATURAL JOIN T1, T2 [USING(attr)]
+   * Equal to JOIN T1, T2 ON ...
+   * USING clause can be omitted but is recommended for better style
+ * [LEFT|RIGHT|FULL] OUTER JOIN  
  
 
-3. SELECT 
+4. SELECT 
 ```
 SELECT column1, column2, ...
 FROM
