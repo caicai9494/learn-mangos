@@ -96,8 +96,14 @@
  * Constrain allowable database states (static)
  * Declaration with original schema or later
  * NOT NULL
- * PRIMARY KEY (Must be unique and only one column can be primary key)
- * UNIQUE
+ * PRIMARY KEY 
+   * Must be unique and only one column can be primary key; Can define composite key; duplicate NULL is allowed to some systems)
+ * UNIQUE (duplicate NULL is allowed)
+ * CHECK (condition)
+   * Many systems (maybe no systems) support subsqueries in CHECK
+ * ASSERTION KEY (Not supported)
+ * Referencial Integrity
+   * If referencing table generates error, then error; if referenced table generates error, then RESTRICT (by default) |SET NULL|CASCADE 
 
 9. Trigger
  * Monitor database changes (dynamic)
