@@ -92,5 +92,24 @@
 7. UPDATE
  * UPDATE TABLE SET (attr = expr)+ WHERE ...
  
+8. Constraints
+ * Constrain allowable database states (static)
+ * Declaration with original schema or later
+ * NOT NULL
+ * PRIMARY KEY (Must be unique and only one column can be primary key)
+ * UNIQUE
+
+9. Trigger
+ * Monitor database changes (dynamic)
+ * Move logic from application to database
+ * 
+ ``` 
+  CREATE Trigger name
+  BEFORE|AFTER|INSTEAD OF events
+  [ reference variables ]
+  [ for each row ]
+  WHEN (condition)
+  action
+  ```
 
 
