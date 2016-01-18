@@ -111,7 +111,7 @@
  * 
  ``` 
   CREATE Trigger name
-  BEFORE|AFTER|INSTEAD OF events
+  BEFORE|AFTER|INSTEAD OF INSERT ON table|DELETE ON table|UPDATE ON table
   [ reference variables ]
   [ for each row ]
   WHEN (condition)
