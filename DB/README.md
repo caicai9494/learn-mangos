@@ -134,8 +134,10 @@
 11. Views
  * Physical (binary), Conceptual (relations), Logical (views)
  * Enhance encapsulation, modularity, query
- * 
+ * Modify views through triggers (CREATE TRIGGER T INSTEAD OF ...)
+ * Modify views which contain aggregation (Disallow modificiation)
+ * System won't enforce the correctness of Triggers to do the modification
  ```
- CREATE VIEW Vname(v1, v2, ...) AS <query> 
+ CREATE VIEW Vname AS <query> 
  ```
  
