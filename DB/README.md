@@ -117,5 +117,16 @@
   WHEN (condition)
   action
   ```
-
-
+ 
+10. Transaction
+ * ACID
+ * Atomicity (a crash during a transaction won't leave any half-way-done statements); 
+ * Consistency (constraint always holds); 
+ * Isolation (quries may be interleaved but there will be limited equavalent sequence); 
+ * READ UNCOMMITTED (allow dirty read)
+ * READ COMMITED (may not allow dirty read, but cannot guarantee global serializability)
+ * REPEATABLE READ (no dirty read; multiple read won't change value, again no guarantee)
+ * SERIALIZABLE (strongest)
+ * READ ONLY
+ * Durability (a crash won't affect any commited transaction);
+ * Rollback (undo partial effects of transaction)
