@@ -130,3 +130,12 @@
  * READ ONLY
  * Durability (a crash won't affect any commited transaction);
  * Rollback (undo partial effects of transaction)
+ 
+11. Views
+ * Physical (binary), Conceptual (relations), Logical (views)
+ * Enhance encapsulation, modularity, query
+ * 
+ ```
+ CREATE VIEW Vname(v1, v2, ...) AS <query> 
+ ```
+ 
