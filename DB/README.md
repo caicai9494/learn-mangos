@@ -134,9 +134,10 @@
 11. Views
  * Physical (binary), Conceptual (relations), Logical (views)
  * Enhance encapsulation, modularity, query
- * Modify views through triggers (CREATE TRIGGER T INSTEAD OF ...)
- * Modify views which contain aggregation (Disallow modificiation)
+ * Modify views through triggers (CREATE TRIGGER T INSTEAD OF ...) on joined table view
+ * Modify views which contain aggregation (Disallow modificiation) not allowed with automatic modification
  * System won't enforce the correctness of Triggers to do the modification
+ * Automatic view modification requires 1. no joined table 2. no aggregation 3. no subquery on table itself 4. attributes not in table have default values
  ```
  CREATE VIEW Vname AS <query> 
  ```
