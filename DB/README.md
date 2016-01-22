@@ -117,5 +117,27 @@
   WHEN (condition)
   action
   ```
-
-
+ 
+10. Transaction
+ * ACID
+ * Atomicity (a crash during a transaction won't leave any half-way-done statements); 
+ * Consistency (constraint always holds); 
+ * Isolation (quries may be interleaved but there will be limited equavalent sequence); 
+ * READ UNCOMMITTED (allow dirty read)
+ * READ COMMITED (may not allow dirty read, but cannot guarantee global serializability)
+ * REPEATABLE READ (no dirty read; multiple read won't change value, again no guarantee)
+ * SERIALIZABLE (strongest)
+ * READ ONLY
+ * Durability (a crash won't affect any commited transaction);
+ * Rollback (undo partial effects of transaction)
+ 
+11. Views
+ * Physical (binary), Conceptual (relations), Logical (views)
+ * Enhance encapsulation, modularity, query
+ * Modify views through triggers (CREATE TRIGGER T INSTEAD OF ...)
+ * Modify views which contain aggregation (Disallow modificiation)
+ * System won't enforce the correctness of Triggers to do the modification
+ ```
+ CREATE VIEW Vname AS <query> 
+ ```
+ 
