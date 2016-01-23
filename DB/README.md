@@ -142,3 +142,9 @@
  CREATE VIEW Vname AS <query> 
  ```
  
+12. Authorization
+ * GRANT prims ON R TO users [WITH GRANT OPTION]
+ * prims: SELECT|DELETE|UPDATE|INSERT (column) ...
+ * REVOKE prims ON R FROM users [CASCADE | RESTRICT]
+ * Authorization can form a tree-structured hierarchy. That's what 'CASCADE' comes for.
+ * If a grant is given to an user from multiple sources, REVOKE from one granter will not do anything.
