@@ -148,3 +148,10 @@
  * REVOKE prims ON R FROM users [CASCADE | RESTRICT]
  * Authorization can form a tree-structured hierarchy. That's what 'CASCADE' comes for.
  * If a grant is given to an user from multiple sources, REVOKE from one granter will not do anything.
+
+13. Recursion 
+ * WITH R1 AS (query), ... 
+ * Set up temporary view
+ * RECURSIVE modify WITH (as oposed to SQL Standard where RECURSIVE modify R)
+ * WITH RECURSIVE R1 AS (base_query UNION recursive_query)  
+ * WITH RECURSIVE R1 AS (query)
