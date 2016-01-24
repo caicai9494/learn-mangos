@@ -117,5 +117,41 @@
   WHEN (condition)
   action
   ```
+ 
+10. Transaction
+ * ACID
+ * Atomicity (a crash during a transaction won't leave any half-way-done statements); 
+ * Consistency (constraint always holds); 
+ * Isolation (quries may be interleaved but there will be limited equavalent sequence); 
+ * READ UNCOMMITTED (allow dirty read)
+ * READ COMMITED (may not allow dirty read, but cannot guarantee global serializability)
+ * REPEATABLE READ (no dirty read; multiple read won't change value, again no guarantee)
+ * SERIALIZABLE (strongest)
+ * READ ONLY
+ * Durability (a crash won't affect any commited transaction);
+ * Rollback (undo partial effects of transaction)
+ 
+11. Views
+ * Physical (binary), Conceptual (relations), Logical (views)
+ * Enhance encapsulation, modularity, query
+ * Modify views through triggers (CREATE TRIGGER T INSTEAD OF ...) on joined table view
+ * Modify views which contain aggregation (Disallow modificiation) not allowed with automatic modification
+ * System won't enforce the correctness of Triggers to do the modification
+ * Automatic view modification requires 1. no joined table 2. no aggregation 3. no subquery on table itself 4. attributes not in table have default values
+ ```
+ CREATE VIEW Vname AS <query> 
+ ```
+ 
+12. Authorization
+ * GRANT prims ON R TO users [WITH GRANT OPTION]
+ * prims: SELECT|DELETE|UPDATE|INSERT (column) ...
+ * REVOKE prims ON R FROM users [CASCADE | RESTRICT]
+ * Authorization can form a tree-structured hierarchy. That's what 'CASCADE' comes for.
+ * If a grant is given to an user from multiple sources, REVOKE from one granter will not do anything.
 
-
+13. Recursion 
+ * WITH R1 AS (query), ... 
+ * Set up temporary view
+ * RECURSIVE modify WITH (as oposed to SQL Standard where RECURSIVE modify R)
+ * WITH RECURSIVE R1 AS (base_query UNION recursive_query)  
+ * WITH RECURSIVE R1 AS (query)
