@@ -7,8 +7,8 @@ CC=g++
 #%.tsk:
 #	${CC} $(subst .tsk,.cc, $@) -o $@ ${CPP_FLAG}
 
-concurrency7.tsk:
-	${CC} concurrency7.cc -o $@ ${CPP_FLAG} -lboost_system -lboost_filesystem
+concurrency8.tsk:
+	${CC} concurrency8.cc -o $@ ${CPP_FLAG} -lboost_system -lboost_filesystem
 
 #concurrency5.tsk:
 #	${CC} concurrency5.cc -o $@ ${CPP_FLAG} 

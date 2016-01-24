@@ -50,16 +50,19 @@ class MonitorFileDir {
     
     FileDir::IT begin() 
     {
+	std::lock_guard<std::mutex> lck(d_mutex);
 	return d_filedir.files.begin();
     }
 
     FileDir::IT end() 
     {
+	std::lock_guard<std::mutex> lck(d_mutex);
 	return d_filedir.files.end();
     }
 
     bool isDirEmpty() 
     {
+	std::lock_guard<std::mutex> lck(d_mutex);
 	return d_filedir.paths.empty();
     }
 
@@ -92,23 +95,7 @@ class MonitorFileDir {
     }
 };
 
-// Use move semantic
-FileDir listDirectory(BF::path&& dir) 
-{
-    FileDir ret;
-
-    for (BF::directory_iterator it(dir); it != BF::directory_iterator(); ++it) {
-	if (BF::is_directory(it->path())) {
-	    ret.paths.push_back(it->path());
-	} else {
-	    ret.files.push_back(dir.string());
-	}
-    }
-
-    return ret;
-}
-
-// Use shared memory 
+// Use shared memory
 void listDirectory2(BF::path&& dir, MonitorFileDir& ret) 
 {
     for (BF::directory_iterator it(dir); it != BF::directory_iterator(); ++it) {
@@ -120,62 +107,15 @@ void listDirectory2(BF::path&& dir, MonitorFileDir& ret)
     }
 }
 
-void test1_move(const std::string& root)
+void test2_shared(MonitorFileDir& fd)
 {
-    path_vector dirTodo;
-    dirTodo.push_back(root);
-
     string_vector files;
 
-    // in this code, all data is moved between threads, rather than copying
-    //  thus we avoid sync problems and is less error-prone
-    while (!dirTodo.empty()) {
-
-	std::vector<std::future<FileDir>> ftrs;
-
-	// starting tasks
-	//  here, we are only gonna start up to 'THREAD_MAX' threads
-	for (int i = 0; i < THREAD_MAX && !dirTodo.empty(); ++i) {
-
-	    auto ftr = std::async(std::launch::async, &listDirectory, std::move(dirTodo.back()));
-	    dirTodo.pop_back();
-
-	    ftrs.push_back(std::move(ftr));
-	}
-
-	try {
-
-	    // barrier
-	    while (!ftrs.empty()) {
-
-	        auto ftr = std::move(ftrs.back());
-	        ftrs.pop_back();
-
-		FileDir fd = ftr.get();
-		std::move(fd.files.begin(), fd.files.end(), std::back_inserter(files));
-		std::move(fd.paths.begin(), fd.paths.end(), std::back_inserter(dirTodo));
-	   }
-
-	} catch (std::exception& ex) {
-	    std::cout << ex.what() << '\n';
-	}
-    }
-
-    std::copy(files.begin(), files.end(), 
-	      std::ostream_iterator<std::string>(std::cout, "\n >"));
-}
-
-void test2_shared(const std::string& root)
-{
-    MonitorFileDir fd;
-    fd.putDir(root);
-
-    string_vector files;
-
-    // in this code, all data is moved between threads, rather than copying
-    //  thus we avoid sync problems and is less error-prone
+    // run in one thread
+    //  chance for optimization
     while (!fd.isDirEmpty()) {
 
+	// run in multiple threads
 	path_vector dirTodo = fd.getDirs(THREAD_MAX);
 	std::vector<std::future<void>> ftrs;
 	while (!dirTodo.empty()) {
@@ -212,43 +152,19 @@ int main(int argc, char* argv[])
     if (argc != 2) {
 	std::cout << "usage: .tsk path\n";
 	return EXIT_FAILURE;
-    }
+    } 
     std::string root = argv[1]; 
+    MonitorFileDir fd;
+    fd.putDir(root);
 
-    auto startTimer = std::chrono::system_clock::now();
-    //test1_move(root);
-    test2_shared(root);
-    auto endTimer = std::chrono::system_clock::now();
-
-    auto dur = endTimer - startTimer;
-    auto durMs = std::chrono::duration_cast<std::chrono::milliseconds>(dur);
-    std::cout << "test1 move durMs: " << durMs.count() << '\n';
-
-    /*
-    auto startTimer2 = std::chrono::system_clock::now();
-    test2_shared(root);
-    auto endTimer2 = std::chrono::system_clock::now();
-
-    auto dur2 = endTimer2 - startTimer2;
-    auto durMs2 = std::chrono::duration_cast<std::chrono::milliseconds>(dur2);
-    std::cout << "test2 shared durMs: " << durMs2.count() << '\n';
-    */
-
-    // unbounded number of threads
-    // not desirable
-
-//    auto fut = async(std::launch::async, &listDirectory, std::move(root));
-//
-//    try {
-//	string_vector listing = fut.get();
-//	std::for_each(listing.begin(), listing.end(), [](std::string& s) {
-//	    std::cout << s << " ";
-//	});
-//    } catch (std::exception& e) {
-//	std::cout << e.what() << '\n';
-//    } catch (...) {
-//	std::cout << "unexpected exception\n";
-//    }
+    // the following code is problemtic
+    // heap may be corrupted in some cases
+    // because we did some clever optimization 
+    // and it turns out it is not that clever
+    auto fut1 = std::async(std::launch::async, &test2_shared, std::ref(fd));
+    auto fut2 = std::async(std::launch::async, &test2_shared, std::ref(fd));
+    fut1.wait();
+    fut2.wait();
 
     return EXIT_SUCCESS;
 }
